@@ -44,6 +44,8 @@
 //! \ingroup TLibEncoder
 //! \{
 
+extern FILE *modes;
+
 static TComMv s_acMvRefineH[9] =
 {
   TComMv(  0,  0 ), // 0
@@ -1032,7 +1034,7 @@ TEncSearch::xIntraCodingLumaBlk( TComDataCU* pcCU,
   
   //===== get prediction signal =====
   predIntraLumaAng( pcCU->getPattern(), uiLumaPredMode, piPred, uiStride, uiWidth, uiHeight, pcCU, bAboveAvail, bLeftAvail );
-  
+
   //===== get residual signal =====
   {
     // get residual
@@ -1363,7 +1365,7 @@ TEncSearch::xRecurIntraCodingQT( TComDataCU*  pcCU,
     }
     //----- code luma block with given intra prediction mode and store Cbf-----
     dSingleCost   = 0.0;
-    xIntraCodingLumaBlk( pcCU, uiTrDepth, uiAbsPartIdx, pcOrgYuv, pcPredYuv, pcResiYuv, uiSingleDistY ); 
+    xIntraCodingLumaBlk( pcCU, uiTrDepth, uiAbsPartIdx, pcOrgYuv, pcPredYuv, pcResiYuv, uiSingleDistY );  
     if( bCheckSplit )
     {
       uiSingleCbfY = pcCU->getCbf( uiAbsPartIdx, TEXT_LUMA, uiTrDepth );
@@ -1767,6 +1769,8 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
   UInt    uiOverallDistC = 0;
   UInt    CandNum;
   Double  CandCostList[ FAST_UDI_MAX_RDMODE_NUM ];
+
+  UInt bestModeDaniel = 0;
   
   //===== set QP and clear Cbf =====
 #if G507_QP_ISSUE_FIX
@@ -1799,6 +1803,11 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
     UInt uiStride      = pcPredYuv->getStride();
     UInt uiRdModeList[FAST_UDI_MAX_RDMODE_NUM];
     Int numModesForFullRD = g_aucIntraModeNumFast[ uiWidthBit ];
+
+    //DANIEL BEGIN
+    fprintf(modes,"%d\n",uiHeight);
+    //DANIEL END
+
     
     Bool doFastSearch = (numModesForFullRD != numModesAvailable);
     if (doFastSearch)
@@ -1825,7 +1834,7 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
         
         CandNum += xUpdateCandList( uiMode, cost, numModesForFullRD, uiRdModeList, CandCostList );
       }
-    
+
 #if FAST_UDI_USE_MPM
       Int uiPreds[2] = {-1, -1};
       Int iMode = -1;
@@ -1867,6 +1876,7 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
     Double dSecondBestPUCost = MAX_DOUBLE;
 #endif
     
+    
     UInt    uiBestPUMode  = 0;
     UInt    uiBestPUDistY = 0;
     UInt    uiBestPUDistC = 0;
@@ -1893,7 +1903,11 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
 #else
       xRecurIntraCodingQT( pcCU, uiInitTrDepth, uiPartOffset, bLumaOnly, pcOrgYuv, pcPredYuv, pcResiYuv, uiPUDistY, uiPUDistC, dPUCost );
 #endif
-      
+
+      //DANIEL BEGIN
+      //fprintf(modes,"%d\t%f\n",uiOrgMode,dPUCost);
+      //DANIEL END
+
       // check r-d cost
       if( dPUCost < dBestPUCost )
       {
@@ -1923,7 +1937,10 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
       }
 #endif
     } // Mode loop
-    
+    //DANIEL BEGIN
+    //fprintf(modes,"%d\n",uiBestPUMode);
+    //fprintf(modes,"\n");
+    //DANIEL END
 #if HHI_RQT_INTRA_SPEEDUP
 #if HHI_RQT_INTRA_SPEEDUP_MOD
     for( UInt ui =0; ui < 2; ++ui )
@@ -2048,8 +2065,20 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
     //=== update PU data ====
     pcCU->setLumaIntraDirSubParts     ( uiBestPUMode, uiPartOffset, uiDepth + uiInitTrDepth );
     pcCU->copyToPic                   ( uiDepth, uiPU, uiInitTrDepth );
+
+    //DANIEL BEGIN
+    if( uiNumPU > 1 )
+        fprintf(modes,"%d\n",uiBestPUMode);
+    bestModeDaniel = uiBestPUMode;
+    //fprintf(modes,"\n");
+    //DANIEL END    
   } // PU loop
-  
+
+  //DANIEL BEGIN
+  if( !(uiNumPU > 1) )
+    fprintf(modes,"%d\n",bestModeDaniel);
+  //fprintf(modes,"\n");
+  //DANIEL END
   
   if( uiNumPU > 1 )
   { // set Cbf for all blocks

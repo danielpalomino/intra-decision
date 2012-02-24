@@ -45,9 +45,16 @@
 // Main function
 // ====================================================================================================================
 
+//DANIEL BEGIN
+FILE *modes;
+//DANIEL END
 int main(int argc, char* argv[])
 {
   TAppEncTop  cTAppEncTop;
+  
+  //DANIEL BEGIN
+  modes = fopen("modes.txt", "w");
+  //DANIEL END
 
   // print information
   fprintf( stdout, "\n" );
@@ -80,6 +87,10 @@ int main(int argc, char* argv[])
 
   // destroy application encoder class
   cTAppEncTop.destroy();
+
+  //DANIEL BEGIN
+  fclose(modes);
+  //DANIEL END
 
   return 0;
 }
