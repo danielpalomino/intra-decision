@@ -1806,10 +1806,21 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
 
     //DANIEL BEGIN
     fprintf(modes,"%d\n",uiHeight);
+    Bool mySearch = true;
     //DANIEL END
 
     
     Bool doFastSearch = (numModesForFullRD != numModesAvailable);
+    //DANIEL BEGIN
+    if (mySearch)
+    {
+        numModesForFullRD = 3;
+        uiRdModeList[0] = 0;
+        uiRdModeList[1] = 25;
+        uiRdModeList[2] = 9;
+    }
+    else {
+        //DANIEL END
     if (doFastSearch)
     {
       assert(numModesForFullRD < numModesAvailable);
@@ -1834,6 +1845,14 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
         
         CandNum += xUpdateCandList( uiMode, cost, numModesForFullRD, uiRdModeList, CandCostList );
       }
+
+      //DANIEL BEGIN
+      for( Int i=0; i < numModesForFullRD; i++)
+      {
+        //fprintf(modes,"%d\t-\t",uiRdModeList[i]);
+        //fprintf(modes,"%f\n",CandCostList[i]);
+      }
+      //DANIEL END
 
 #if FAST_UDI_USE_MPM
       Int uiPreds[2] = {-1, -1};
@@ -1869,7 +1888,7 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
         uiRdModeList[i] = i;
       }
     }
-    
+    }
     //===== check modes (using r-d costs) =====
 #if HHI_RQT_INTRA_SPEEDUP_MOD
     UInt   uiSecondBestMode  = MAX_UINT;
