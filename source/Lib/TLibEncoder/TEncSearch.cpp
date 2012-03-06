@@ -34,7 +34,6 @@
 /** \file     TEncSearch.cpp
  \brief    encoder search class
  */
-
 #include "TLibCommon/TypeDef.h"
 #include "TLibCommon/TComRom.h"
 #include "TLibCommon/TComMotionInfo.h"
@@ -44,7 +43,12 @@
 //! \ingroup TLibEncoder
 //! \{
 
+//DANIEL BEGIN
 extern FILE *modes;
+extern FILE *input_modes;
+extern Int level8, level16, level32, level64;
+extern Bool mySearch;
+//DANIEL END
 
 static TComMv s_acMvRefineH[9] =
 {
@@ -1770,7 +1774,7 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
   UInt    CandNum;
   Double  CandCostList[ FAST_UDI_MAX_RDMODE_NUM ];
 
-  UInt bestModeDaniel = 0;
+  //UInt bestModeDaniel = 0;
   
   //===== set QP and clear Cbf =====
 #if G507_QP_ISSUE_FIX
@@ -1806,88 +1810,90 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
 
     //DANIEL BEGIN
     fprintf(modes,"%d\n",uiHeight);
-    Bool mySearch = true;
+    int file;
     //DANIEL END
 
     
+    
     Bool doFastSearch = (numModesForFullRD != numModesAvailable);
     //DANIEL BEGIN
-    if (mySearch)
+    if (mySearch and ((uiHeight == level8) or (uiHeight == level16) or (uiHeight == level32) or (uiHeight == level64)))
     {
-        numModesForFullRD = 3;
-        uiRdModeList[0] = 0;
-        uiRdModeList[1] = 25;
-        uiRdModeList[2] = 9;
+        file = fscanf(input_modes, "%d", &numModesForFullRD);        
+        for(Int i=0; i< numModesForFullRD; i++)
+        {
+            file = fscanf(input_modes,"%d", &uiRdModeList[i]);
+        }
     }
     else {
         //DANIEL END
-    if (doFastSearch)
-    {
-      assert(numModesForFullRD < numModesAvailable);
-
-      for( Int i=0; i < numModesForFullRD; i++ ) 
-      {
-        CandCostList[ i ] = MAX_DOUBLE;
-      }
-      CandNum = 0;
-      
-      for( Int modeIdx = 0; modeIdx < numModesAvailable; modeIdx++ )
-      {
-        UInt uiMode = modeIdx;
-
-        predIntraLumaAng( pcCU->getPattern(), uiMode, piPred, uiStride, uiWidth, uiHeight, pcCU, bAboveAvail, bLeftAvail );
-        
-        // use hadamard transform here
-        UInt uiSad = m_pcRdCost->calcHAD( piOrg, uiStride, piPred, uiStride, uiWidth, uiHeight );
-        
-        UInt   iModeBits = xModeBitsIntra( pcCU, uiMode, uiPU, uiPartOffset, uiDepth, uiInitTrDepth );
-        Double cost      = (Double)uiSad + (Double)iModeBits * m_pcRdCost->getSqrtLambda();
-        
-        CandNum += xUpdateCandList( uiMode, cost, numModesForFullRD, uiRdModeList, CandCostList );
-      }
-
-      //DANIEL BEGIN
-      for( Int i=0; i < numModesForFullRD; i++)
-      {
-        //fprintf(modes,"%d\t-\t",uiRdModeList[i]);
-        //fprintf(modes,"%f\n",CandCostList[i]);
-      }
-      //DANIEL END
-
-#if FAST_UDI_USE_MPM
-      Int uiPreds[2] = {-1, -1};
-      Int iMode = -1;
-      Int numCand = pcCU->getIntraDirLumaPredictor( uiPartOffset, uiPreds, &iMode );
-      if( iMode >= 0 )
-      {
-        numCand = 1;
-        uiPreds[0] = iMode;
-      }
-
-      for( Int j=0; j < numCand; j++)
-
-      {
-        Bool mostProbableModeIncluded = false;
-        Int mostProbableMode = uiPreds[j];
-        
-        for( Int i=0; i < numModesForFullRD; i++)
+        if (doFastSearch)
         {
-          mostProbableModeIncluded |= (mostProbableMode == uiRdModeList[i]);
+          assert(numModesForFullRD < numModesAvailable);
+
+          for( Int i=0; i < numModesForFullRD; i++ )
+          {
+            CandCostList[ i ] = MAX_DOUBLE;
+          }
+          CandNum = 0;
+
+          for( Int modeIdx = 0; modeIdx < numModesAvailable; modeIdx++ )
+          {
+            UInt uiMode = modeIdx;
+
+            predIntraLumaAng( pcCU->getPattern(), uiMode, piPred, uiStride, uiWidth, uiHeight, pcCU, bAboveAvail, bLeftAvail );
+
+            // use hadamard transform here
+            UInt uiSad = m_pcRdCost->calcHAD( piOrg, uiStride, piPred, uiStride, uiWidth, uiHeight );
+
+            UInt   iModeBits = xModeBitsIntra( pcCU, uiMode, uiPU, uiPartOffset, uiDepth, uiInitTrDepth );
+            Double cost      = (Double)uiSad + (Double)iModeBits * m_pcRdCost->getSqrtLambda();
+
+            CandNum += xUpdateCandList( uiMode, cost, numModesForFullRD, uiRdModeList, CandCostList );
+          }
+
+
+    #if FAST_UDI_USE_MPM
+          Int uiPreds[2] = {-1, -1};
+          Int iMode = -1;
+          Int numCand = pcCU->getIntraDirLumaPredictor( uiPartOffset, uiPreds, &iMode );
+          if( iMode >= 0 )
+          {
+            numCand = 1;
+            uiPreds[0] = iMode;
+          }
+
+          for( Int j=0; j < numCand; j++)
+
+          {
+            Bool mostProbableModeIncluded = false;
+            Int mostProbableMode = uiPreds[j];
+
+            for( Int i=0; i < numModesForFullRD; i++)
+            {
+              mostProbableModeIncluded |= (mostProbableMode == uiRdModeList[i]);
+            }
+            if (!mostProbableModeIncluded)
+            {
+              uiRdModeList[numModesForFullRD++] = mostProbableMode;
+            }
+          }
+    #endif // FAST_UDI_USE_MPM
+          /*/DANIEL BEGIN
+          for( Int i=0; i < numModesForFullRD; i++)
+          {
+            fprintf(modes,"%d\t-\t",uiRdModeList[i]);
+            fprintf(modes,"%f\n",CandCostList[i]);
+          }
+          *///DANIEL END
         }
-        if (!mostProbableModeIncluded)
+        else
         {
-          uiRdModeList[numModesForFullRD++] = mostProbableMode;
+          for( Int i=0; i < numModesForFullRD; i++)
+          {
+            uiRdModeList[i] = i;
+          }
         }
-      }
-#endif // FAST_UDI_USE_MPM
-    }
-    else
-    {
-      for( Int i=0; i < numModesForFullRD; i++)
-      {
-        uiRdModeList[i] = i;
-      }
-    }
     }
     //===== check modes (using r-d costs) =====
 #if HHI_RQT_INTRA_SPEEDUP_MOD
@@ -2086,16 +2092,16 @@ TEncSearch::estIntraPredQT( TComDataCU* pcCU,
     pcCU->copyToPic                   ( uiDepth, uiPU, uiInitTrDepth );
 
     //DANIEL BEGIN
-    if( uiNumPU > 1 )
-        fprintf(modes,"%d\n",uiBestPUMode);
-    bestModeDaniel = uiBestPUMode;
+    //if( uiNumPU > 1 )
+    fprintf(modes,"%d\n",uiBestPUMode);
+    //bestModeDaniel = uiBestPUMode;
     //fprintf(modes,"\n");
     //DANIEL END    
   } // PU loop
 
   //DANIEL BEGIN
-  if( !(uiNumPU > 1) )
-    fprintf(modes,"%d\n",bestModeDaniel);
+  //if( !(uiNumPU > 1) )
+  //fprintf(modes,"%d\n",bestModeDaniel);
   //fprintf(modes,"\n");
   //DANIEL END
   

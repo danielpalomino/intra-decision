@@ -47,6 +47,10 @@
 #include <assert.h>
 #include "TLibCommon/CommonDef.h"
 
+//DANIEL BEGIN
+extern FILE *results;
+//DANIEL END
+
 //! \ingroup TLibEncoder
 //! \{
 
@@ -100,6 +104,12 @@ public:
            getPsnrY() / (Double)getNumPic(),
            getPsnrU() / (Double)getNumPic(),
            getPsnrV() / (Double)getNumPic() );
+    //DANIEL BEGIN
+    if (cDelim == 'i'){
+        fprintf(results,"%.4lf\n", getBits() * dScale);
+        fprintf(results,"%.4lf\n",getPsnrY() / (Double)getNumPic());
+    }
+    //DANIEL END
   }
   
   Void    printSummaryOut ()

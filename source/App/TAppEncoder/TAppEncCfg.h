@@ -70,6 +70,9 @@ protected:
   Int       m_iFrameToBeEncoded;                              ///< number of encoded frames
   Bool      m_bUsePAD;                                        ///< flag for using source padding
   Int       m_aiPad[2];                                       ///< number of padded pixels for width and height
+
+  // Daniel Intra Search
+  bool danielIntraSearch;
   
   // coding structure
   Int       m_iIntraPeriod;                                   ///< period of I-slice (random access period)

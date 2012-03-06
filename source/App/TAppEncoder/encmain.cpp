@@ -47,14 +47,14 @@
 
 //DANIEL BEGIN
 FILE *modes;
+FILE *input_modes;
+FILE *results;
+Int level8, level16, level32, level64;
+Bool mySearch;
 //DANIEL END
 int main(int argc, char* argv[])
 {
   TAppEncTop  cTAppEncTop;
-  
-  //DANIEL BEGIN
-  modes = fopen("modes.txt", "w");
-  //DANIEL END
 
   // print information
   fprintf( stdout, "\n" );
@@ -74,6 +74,20 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  //DANIEL BEGIN
+  int file;
+  modes = fopen("modes", "w");
+  results = fopen("results","w");
+  if (mySearch)
+  {
+    input_modes = fopen("input_modes","r");
+    file = fscanf(input_modes,"%d",&level8);
+    file = fscanf(input_modes,"%d",&level16);
+    file = fscanf(input_modes,"%d",&level32);
+    file = fscanf(input_modes,"%d",&level64);
+  }
+  //DANIEL END
+
   // starting time
   double dResult;
   long lBefore = clock();
@@ -89,7 +103,11 @@ int main(int argc, char* argv[])
   cTAppEncTop.destroy();
 
   //DANIEL BEGIN
+  fprintf(results,"%.3f\n",dResult);
   fclose(modes);
+  fclose(results);
+  if(mySearch)
+    fclose(input_modes);
   //DANIEL END
 
   return 0;

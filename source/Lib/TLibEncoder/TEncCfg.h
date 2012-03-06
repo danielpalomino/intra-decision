@@ -225,6 +225,9 @@ protected:
   Bool      m_bUseBQP;
 #endif
   Bool      m_bUseFastEnc;
+  //DANIEL BEGIN
+  Bool danielIntraSearch;
+  //DANIEL END
 #if EARLY_CU_DETERMINATION
   Bool      m_bUseEarlyCU;
 #endif
@@ -518,6 +521,11 @@ public:
   Void      setUseBQP                       ( Bool  b )     { m_bUseBQP     = b; }
 #endif
   Void      setUseFastEnc                   ( Bool  b )     { m_bUseFastEnc = b; }
+  //DANIEL BEGIN
+  Void      setDanielIntraSearch            ( Bool b  )     {danielIntraSearch = b; }
+  bool      getDanielIntraSearch            ( )     {return danielIntraSearch; }
+  //DANIEL END
+
 #if EARLY_CU_DETERMINATION
   Void      setUseEarlyCU                   ( Bool  b )     { m_bUseEarlyCU = b; }
 #endif

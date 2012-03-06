@@ -50,6 +50,8 @@
 using namespace std;
 namespace po = df::program_options_lite;
 
+extern Bool mySearch;
+
 //! \ingroup TAppEncoder
 //! \{
 
@@ -154,6 +156,10 @@ Bool TAppEncCfg::parseCfg( Int argc, Char* argv[] )
   ("InputFile,i",     cfg_InputFile,     string(""), "original YUV input file name")
   ("BitstreamFile,b", cfg_BitstreamFile, string(""), "bitstream output file name")
   ("ReconFile,o",     cfg_ReconFile,     string(""), "reconstructed YUV output file name")
+
+  /*Daniel Search for Intra*/
+  ("DanielIntraSearch,dbg",     danielIntraSearch ,false, "Fast Intra Decision")
+  
 #if G678_LAMBDA_ADJUSTMENT
   ("LambdaModifier0,-LM0", m_adLambdaModifier[ 0 ], ( double )1.0, "Lambda modifier for temporal layer 0")
   ("LambdaModifier1,-LM1", m_adLambdaModifier[ 1 ], ( double )1.0, "Lambda modifier for temporal layer 1")
@@ -965,6 +971,8 @@ Void TAppEncCfg::xPrintParameter()
   printf("Decoding refresh type        : %d\n", m_iDecodingRefreshType );
   printf("QP                           : %5.2f\n", m_fQP );
   printf("Max dQP signaling depth      : %d\n", m_iMaxCuDQPDepth);
+  printf("Daniel Intra Search          : %d\n", danielIntraSearch);
+  mySearch = danielIntraSearch;
 
 #if G509_CHROMA_QP_OFFSET
   printf("Chroma Qp Offset             : %d\n", m_iChromaQpOffset   );

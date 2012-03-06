@@ -185,6 +185,9 @@ Void TAppEncTop::xInitLibCfg()
   m_cTEncTop.setUseBQP                       ( m_bUseBQP      );
 #endif
   m_cTEncTop.setUseFastEnc                   ( m_bUseFastEnc  );
+  //DANIEL BEGIN
+  m_cTEncTop.setDanielIntraSearch            (danielIntraSearch);
+  //DANIEL END
 #if EARLY_CU_DETERMINATION
   m_cTEncTop.setUseEarlyCU                   ( m_bUseEarlyCU  ); 
 #endif

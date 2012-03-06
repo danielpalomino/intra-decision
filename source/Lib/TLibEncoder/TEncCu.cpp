@@ -46,6 +46,8 @@
 using namespace std;
 #endif
 
+extern Bool mySearch;
+
 //! \ingroup TLibEncoder
 //! \{
 
