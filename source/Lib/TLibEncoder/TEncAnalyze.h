@@ -108,6 +108,8 @@ public:
     if (cDelim == 'i'){
         fprintf(results,"%.4lf\n", getBits() * dScale);
         fprintf(results,"%.4lf\n",getPsnrY() / (Double)getNumPic());
+        fprintf(results,"%.4lf\n",getPsnrU() / (Double)getNumPic());
+        fprintf(results,"%.4lf\n",getPsnrV() / (Double)getNumPic());
     }
     //DANIEL END
   }

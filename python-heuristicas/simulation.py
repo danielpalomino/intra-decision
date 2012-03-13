@@ -113,24 +113,28 @@ for heuristic in heuristic_list:
 			print path_heur
 			os.system(path_heur)
 			path_coder_fast = coder + space + param + space + cfg_path + cfgs_fast[i] + space + param + space + sequence_path + sequences[j]
+			print path_coder_fast
 			os.system(path_coder_fast)
 			getResults(allResults,QP_list[i],sequences[j],0,8)
 			##NIVEL 16
 			path_heur = 'python heuristics.py modes 8 ' + str(heuristic) + ' > input_modes'
 			print path_heur
 			os.system(path_heur)
+			print path_coder_fast
 			os.system(path_coder_fast)
 			getResults(allResults,QP_list[i],sequences[j],0,16)
 			##NIVEL 32
 			path_heur = 'python heuristics.py modes 16 ' + str(heuristic) + ' > input_modes'
 			print path_heur
 			os.system(path_heur)
+			print path_coder_fast
 			os.system(path_coder_fast)
 			getResults(allResults,QP_list[i],sequences[j],0,32)
 			##NIVEL 64
 			path_heur = 'python heuristics.py modes 32 ' + str(heuristic) + ' > input_modes'
 			print path_heur
 			os.system(path_heur)
+			print path_coder_fast
 			os.system(path_coder_fast)
 			getResults(allResults,QP_list[i],sequences[j],0,64)
 		allResults.close()
