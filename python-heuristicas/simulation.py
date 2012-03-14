@@ -76,7 +76,7 @@ results_list = [
 'Vidyo4'
 ]
 
-heuristic_list = [0,1]
+heuristic_list = [0,1,2]
 
 def getResults(allResults,qp,sequence,heuristic,level):
 	fp = open('results','r')

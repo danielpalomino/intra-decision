@@ -12,11 +12,11 @@ results_list = [
 'BasketballDrills0.results',
 'BQMall0.results',
 'PartyScene0.results',
-'RaceHorses0.results',
+'RaceHorsesC0.results',
 'BasketballPass0.results',
 'BQSquare0.results',
 'BlowingBubbles0.results',
-'RaceHorsesC0.results',
+'RaceHorses0.results',
 'Vidyo10.results',
 'Vidyo30.results',
 'Vidyo40.results',
@@ -36,11 +36,11 @@ results_list = [
 #'BasketballDrills1.results',
 #'BQMall1.results',
 #'PartyScene1.results',
-#'RaceHorses1.results',
+#'RaceHorsesC1.results',
 #'BasketballPass1.results',
 #'BQSquare1.results',
 #'BlowingBubbles1.results',
-#'RaceHorsesC1.results',
+#'RaceHorses1.results',
 #'Vidyo11.results',
 #'Vidyo31.results',
 #'Vidyo41.results',
@@ -48,6 +48,30 @@ results_list = [
 #'ChinaSpeed1.results',
 #'SlideEditing1.results',
 #'SlideShow1.results'
+],
+[
+#'Traffic2.results',
+#'PeopleOnStreet2.results',
+#'Kimono2.results',
+#'ParkScene2.results',
+#'Cactus2.results',
+#'BasketballDrive2.results',
+#'BQTerrace2.results',
+#'BasketballDrills2.results',
+#'BQMall2.results',
+#'PartyScene2.results',
+#'RaceHorsesC2.results',
+#'BasketballPass2.results',
+#'BQSquare2.results',
+#'BlowingBubbles2.results',
+#'RaceHorses2.results',
+#'Vidyo12.results',
+#'Vidyo32.results',
+#'Vidyo42.results',
+#'BasketballDrillText2.results',
+#'ChinaSpeed2.results',
+#'SlideEditing2.results',
+#'SlideShow2.results'
 ]
 ]
 
@@ -183,6 +207,10 @@ def read_profile(fp_result,video,profile):
 	result.bits = float(fp_result.readline())
 	#READ Y_PSNR
 	result.Y_PSNR = float(fp_result.readline())
+	#READ U_PSNR
+	result.U_PSNR = float(fp_result.readline())
+	#READ V_PSNR
+	result.V_PSNR = float(fp_result.readline())
 	#READ TIME
 	result.time = float(fp_result.readline())
 	if qp == 22:
