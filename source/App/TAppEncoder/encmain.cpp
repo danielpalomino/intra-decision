@@ -36,6 +36,7 @@
 */
 
 #include <time.h>
+#include <sys/time.h>
 #include "TAppEncTop.h"
 
 //! \ingroup TAppEncoder
@@ -91,6 +92,11 @@ int main(int argc, char* argv[])
   // starting time
   double dResult;
   long lBefore = clock();
+  //DANIEL BEGIN
+  double diff_time;
+  static struct timeval timer_start, timer_end;
+  gettimeofday(&timer_start, NULL);
+  //DANIEL END
 
   // call encoding function
   cTAppEncTop.encode();
@@ -98,12 +104,15 @@ int main(int argc, char* argv[])
   // ending time
   dResult = (double)(clock()-lBefore) / CLOCKS_PER_SEC;
   printf("\n Total Time: %12.3f sec.\n", dResult);
+  //DANIEL BEGIN
+  gettimeofday(&timer_end,NULL);
+  diff_time = timer_end.tv_sec - timer_start.tv_sec + (timer_end.tv_usec - timer_start.tv_usec) / 1000000.0;
 
   // destroy application encoder class
   cTAppEncTop.destroy();
 
   //DANIEL BEGIN
-  fprintf(results,"%.3f\n",dResult);
+  fprintf(results,"%.3f\n",diff_time);
   fclose(modes);
   fclose(results);
   if(mySearch)
