@@ -2,52 +2,52 @@ from result import Result
 import sys
 
 results_list = [
-['Traffic0.results',
-'PeopleOnStreet0.results',
-'Kimono0.results',
-'ParkScene0.results',
-'Cactus0.results',
-'BasketballDrive0.results',
-'BQTerrace0.results',
-'BasketballDrills0.results',
-'BQMall0.results',
-'PartyScene0.results',
-'RaceHorsesC0.results',
-'BasketballPass0.results',
-'BQSquare0.results',
-'BlowingBubbles0.results',
-'RaceHorses0.results',
-'Vidyo10.results',
-'Vidyo30.results',
-'Vidyo40.results',
-'BasketballDrillText0.results',
-'ChinaSpeed0.results',
-'SlideEditing0.results',
-'SlideShow0.results'
+[#'Traffic0.results',
+#'PeopleOnStreet0.results',
+#'Kimono0.results',
+#'ParkScene0.results',
+#'Cactus0.results',
+#'BasketballDrive0.results',
+#'BQTerrace0.results',
+#'BasketballDrill0.results',
+#'BQMall0.results',
+#'PartyScene0.results',
+#'RaceHorses0.results',
+#'BasketballPass0.results',
+#'BQSquare0.results',
+#'BlowingBubbles0.results',
+#'RaceHorsesC0.results',
+#'Vidyo10.results',
+#'Vidyo30.results',
+#'Vidyo40.results',
+#'BasketballDrillText0.results',
+#'ChinaSpeed0.results',
+#'SlideEditing0.results',
+#'SlideShow0.results'
 ],
 [
-#'Traffic1.results',
-#'PeopleOnStreet1.results',
-#'Kimono1.results',
-#'ParkScene1.results',
-#'Cactus1.results',
-#'BasketballDrive1.results',
-#'BQTerrace1.results',
-#'BasketballDrills1.results',
-#'BQMall1.results',
-#'PartyScene1.results',
-#'RaceHorsesC1.results',
-#'BasketballPass1.results',
-#'BQSquare1.results',
-#'BlowingBubbles1.results',
-#'RaceHorses1.results',
-#'Vidyo11.results',
-#'Vidyo31.results',
-#'Vidyo41.results',
-#'BasketballDrillText1.results',
-#'ChinaSpeed1.results',
-#'SlideEditing1.results',
-#'SlideShow1.results'
+'Traffic1.results',
+'PeopleOnStreet1.results',
+'Kimono1.results',
+'ParkScene1.results',
+'Cactus1.results',
+'BasketballDrive1.results',
+'BQTerrace1.results',
+'BasketballDrill1.results',
+'BQMall1.results',
+'PartyScene1.results',
+'RaceHorses1.results',
+'BasketballPass1.results',
+'BQSquare1.results',
+'BlowingBubbles1.results',
+'RaceHorsesC1.results',
+'Vidyo11.results',
+'Vidyo31.results',
+'Vidyo41.results',
+'BasketballDrillText1.results',
+'ChinaSpeed1.results',
+'SlideEditing1.results',
+'SlideShow1.results'
 ],
 [
 #'Traffic2.results',
@@ -57,14 +57,14 @@ results_list = [
 #'Cactus2.results',
 #'BasketballDrive2.results',
 #'BQTerrace2.results',
-#'BasketballDrills2.results',
+#'BasketballDrill2.results',
 #'BQMall2.results',
 #'PartyScene2.results',
-#'RaceHorsesC2.results',
+#'RaceHorses2.results',
 #'BasketballPass2.results',
 #'BQSquare2.results',
 #'BlowingBubbles2.results',
-#'RaceHorses2.results',
+#'RaceHorsesC2.results',
 #'Vidyo12.results',
 #'Vidyo32.results',
 #'Vidyo42.results',
@@ -200,19 +200,26 @@ results_h0_depth64 = [
 def read_profile(fp_result,video,profile):
 	#READ QP
 	qp = int(fp_result.readline())
+#	print str(qp)
 	#READ DEPTH
 	depth = int(fp_result.readline())
+#	print str(depth)
 	result = Result()
 	#READ BITS
 	result.bits = float(fp_result.readline())
+#	print str(result.bits)
 	#READ Y_PSNR
 	result.Y_PSNR = float(fp_result.readline())
+#	print str(result.Y_PSNR)
 	#READ U_PSNR
 	result.U_PSNR = float(fp_result.readline())
+#	print str(result.U_PSNR)
 	#READ V_PSNR
 	result.V_PSNR = float(fp_result.readline())
+#	print str(result.V_PSNR)
 	#READ TIME
 	result.time = float(fp_result.readline())
+#	print str(result.time)
 	if qp == 22:
 		j=0
 	elif qp == 27:
@@ -242,6 +249,7 @@ for l in range(0,len(results_list)):
 		heuristic = fp_result.readline()
 		#READ VIDEO
 		video = fp_result.readline()
+		print str(video)
 		for i in range(0,8):
 			#READ PROFILE
 			profile = fp_result.readline()
